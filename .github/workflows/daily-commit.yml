@@ -2,8 +2,11 @@ name: Daily Commit Bot
 
 on:
   schedule:
-    - cron: '0 10 * * *'   # runs every day at 10:00 UTC (3:30 PM IST)
-  workflow_dispatch:        # allows manual run
+    - cron: '0 10 * * *'   # runs daily at 10:00 UTC (3:30 PM IST)
+  workflow_dispatch:        # allows manual trigger for testing
+
+permissions:
+  contents: write   # 👈 gives permission to push changes
 
 jobs:
   commit-job:
@@ -19,4 +22,5 @@ jobs:
           git config user.email "24f2004695@ds.study.iitm.ac.in"
           git add daily-log.txt
           git commit -m "Daily automated commit $(date)" || echo "No changes to commit"
-          git push
+          git push https://x-access-token:${{ secrets.GITHUB_TOKEN }}@github.com/${{ github.repository }} HEAD:main
+
